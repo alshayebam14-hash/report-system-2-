@@ -71,7 +71,7 @@
         <h2>نظام رفع الشكاوي</h2>
         <form id="complaintForm">
             <div class="form-group">
-                <label for="adminId">ايدي او كوبي يوزر المسؤول (المبلغ):</label>
+                <label for="adminId">ايدي او كوبي يوزر المشتكي (المبلغ):</label>
                 <input type="text" id="adminId" required placeholder="مثال: 773">
             </div>
 
@@ -117,7 +117,7 @@
 
             const formData = new FormData();
             
-            let messageContent = `🚨 **شكوى جديدة تم رفعها!**\n👤 **ايدي المسؤول (المبلغ):** <@${adminId}>\n🎯 **ايدي المشتكى عليه:** <@${accusedId}>\n📄 **التفاصيل:**\n${details}`;
+            let messageContent = `🚨 **شكوى جديدة تم رفعها!**\n👤 **ايدي المشتكي (المبلغ):** <@${adminId}>\n🎯 **ايدي المشتكى عليه:** <@${accusedId}>\n📄 **التفاصيل:**\n${details}`;
             
             if (videoUrl) {
                 messageContent += `\n🎬 **رابط الفيديو:** ${videoUrl}`;
