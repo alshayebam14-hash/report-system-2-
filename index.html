@@ -12,7 +12,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
         }
         .container {
@@ -71,8 +71,13 @@
         <h2>نظام رفع الشكاوي</h2>
         <form id="complaintForm">
             <div class="form-group">
-                <label for="adminId">كوبي يوزر المشتكي / المسؤول:</label>
-                <input type="text" id="adminId" required placeholder="مثال: 12312313324">
+                <label for="adminId">ايدي المسؤول (المبلغ):</label>
+                <input type="text" id="adminId" required placeholder="مثال: 773">
+            </div>
+
+            <div class="form-group">
+                <label for="accusedId">ايدي المشكو عليه (المخالف):</label>
+                <input type="text" id="accusedId" required placeholder="مثال: 456">
             </div>
 
             <div class="form-group">
@@ -81,12 +86,12 @@
             </div>
 
             <div class="form-group">
-                <label for="complaintFile">رفع صورة (اختياري):</label>
+                <label for="complaintFile">رفع صورة:</label>
                 <input type="file" id="complaintFile" accept="image/*">
             </div>
 
             <div class="form-group">
-                <label for="videoUrl">رابط الدليل / الفيديو (اختياري):</label>
+                <label for="videoUrl">رابط الفيديو (اختياري):</label>
                 <input type="text" id="videoUrl" placeholder="ضع رابط الفيديو هنا (YouTube, Streamable...)">
             </div>
 
@@ -101,6 +106,7 @@
             e.preventDefault();
             
             const adminId = document.getElementById('adminId').value;
+            const accusedId = document.getElementById('accusedId').value;
             const details = document.getElementById('complaintDetails').value;
             const fileInput = document.getElementById('complaintFile').files[0];
             const videoUrl = document.getElementById('videoUrl').value;
@@ -111,10 +117,10 @@
 
             const formData = new FormData();
             
-            let messageContent = `🚨 **شكوى جديدة تم رفعها!**\n👤 **كوبي يوزر صاحب الشكوى:** <@${adminId}>\n📄 **التفاصيل:**\n${details}`;
+            let messageContent = `🚨 **شكوى جديدة تم رفعها!**\n👤 **ايدي المسؤول (المبلغ):** <@${adminId}>\n🎯 **ايدي المشكو عليه:** <@${accusedId}>\n📄 **التفاصيل:**\n${details}`;
             
             if (videoUrl) {
-                messageContent += `\n🎬 **رابط الدليل/الفيديو:** ${videoUrl}`;
+                messageContent += `\n🎬 **رابط الفيديو:** ${videoUrl}`;
             }
 
             const payload = {
