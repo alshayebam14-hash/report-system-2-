@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام رفع الشكاوي</title>
+    <style>
+        body {
+            background-color: #1a1a1a;
+            color: #ffffff;
+            font-family: Tahoma, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #2b2b2b;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            width: 400px;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #5865F2;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        input[type="text"], textarea, input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #444;
+            border-radius: 5px;
+            background-color: #1e1e1e;
+            color: #fff;
+            box-sizing: border-box;
+        }
+        textarea {
+            resize: vertical;
+            height: 100px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #5865F2;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background-color: #4752C4;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>نظام رفع الشكاوي</h2>
+        <form id="complaintForm">
+            <div class="form-group">
+                <label for="adminId">كوبي يوزر المشتكي / المسؤول:</label>
+                <input type="text" id="adminId" required placeholder="مثال: 12312313324">
+            </div>
+
+            <div class="form-group">
+                <label for="complaintDetails">تفاصيل الشكوى:</label>
+                <textarea id="complaintDetails" required placeholder="اكتب تفاصيل الشكوى هنا..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="complaintFile">رفع صورة (اختياري):</label>
+                <input type="file" id="complaintFile" accept="image/*">
+            </div>
+
+            <div class="form-group">
+                <label for="videoUrl">رابط الدليل / الفيديو (اختياري):</label>
+                <input type="text" id="videoUrl" placeholder="ضع رابط الفيديو هنا (YouTube, Streamable...)">
+            </div>
+
+            <button type="submit" id="submitBtn">إرسال الشكوى</button>
+        </form>
+    </div>
+
+    <script>
+        const WEBHOOK_URL = "https://discord.com/api/webhooks/1548139936127914095/EmhL6isWAj_fJlTPbRdd6E3RFy1fjzECrmb4Vt1_Uh3a3sEokkfH8Tor-FJ-5OGucSs0";
+
+        document.getElementById('complaintForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const adminId = document.getElementById('adminId').value;
+            const details = document.getElementById('complaintDetails').value;
+            const fileInput = document.getElementById('complaintFile').files[0];
+            const videoUrl = document.getElementById('videoUrl').value;
+            const submitBtn = document.getElementById('submitBtn');
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = "جاري الإرسال...";
+
+            const formData = new FormData();
+            
+            let messageContent = `🚨 **شكوى جديدة تم رفعها!**\n👤 **كوبي يوزر صاحب الشكوى:** <@${adminId}>\n📄 **التفاصيل:**\n${details}`;
+            
+            if (videoUrl) {
+                messageContent += `\n🎬 **رابط الدليل/الفيديو:** ${videoUrl}`;
+            }
+
+            const payload = {
+                content: messageContent
+            };
+
+            formData.append('payload_json', JSON.stringify(payload));
+
+            if (fileInput) {
+                formData.append('file', fileInput);
+            }
+
+            try {
+                const response = await fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    alert('تم إرسال الشكوى إلى ديسورد بنجاح!');
+                    document.getElementById('complaintForm').reset();
+                } else {
+                    alert('حدث خطأ أثناء إرسال الشكوى، تأكد من صحة الرابط.');
+                }
+            } catch (error) {
+                console.error(error);
+                alert('فشل الاتصال بالديسورد.');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = "إرسال الشكوى";
+            }
+        });
+    </script>
+
+</body>
+</html>
